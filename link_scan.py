@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 from typing import List
+import sys
 
 
 def get_links(url: str):
@@ -63,6 +64,20 @@ def invalid_urls(urllist: List[str]) -> List[str]:
 
 
 if __name__ == "__main__":
-    print('run...')
-    listt = ["https://cpske.github.io/ISP/", "https://kucafe.com/search?q=coffee", "#prices", "abcd"]
-    print(invalid_urls(listt))
+    try:
+        input_url = sys.argv[1]
+    except IndexError:
+        print("Usage:  python3 link_scan.py url\n")
+        print("Test all hyperlinks on the given url.")
+        sys.exit()
+    link_list = get_links(input_url)
+    print()
+
+    for url_link in link_list:
+        print(url_link)
+    print()
+
+    print("Bad Links:")
+    invalid_link_list = invalid_urls(link_list)
+    for j in invalid_link_list:
+        print(j)
