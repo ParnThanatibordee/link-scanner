@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
+from typing import List
 
 
 def get_links(url: str):
@@ -48,9 +49,20 @@ def is_valid_url(url: str):
         return True
 
 
+def invalid_urls(urllist: List[str]) -> List[str]:
+    """Validate the urls in urllist and return a new list containing
+    the invalid or unreachable urls.
+    """
+    invalid_list = []
+
+    for i in urllist:
+        if not(is_valid_url(i)):
+            invalid_list.append(i)
+
+    return invalid_list
+
+
 if __name__ == "__main__":
-    print(get_links('https://cpske.github.io/ISP/'))
-    print(is_valid_url("https://cpske.github.io/ISP/"))
-    print(is_valid_url("https://kucafe.com/search?q=coffee"))
-    print(is_valid_url("#prices"))
-    print(is_valid_url("abcd"))
+    print('run...')
+    listt = ["https://cpske.github.io/ISP/", "https://kucafe.com/search?q=coffee", "#prices", "abcd"]
+    print(invalid_urls(listt))
