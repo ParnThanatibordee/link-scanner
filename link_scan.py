@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
 
 
 def get_links(url: str):
@@ -15,9 +16,7 @@ def get_links(url: str):
 
     assert my_options.headless
 
-    # TODO: change path_to_driver to your own path
-    path_to_driver = 'C:/Users/parn8/OneDrive/Desktop/chromedriver_win32/chromedriver.exe'  # Your PATH/TO/DRIVER
-    browser = webdriver.Chrome(path_to_driver, options=my_options)
+    browser = webdriver.Chrome(options=my_options)
     browser.implicitly_wait(10)
     browser.get(url)
 
@@ -32,5 +31,26 @@ def get_links(url: str):
     return result
 
 
+def is_valid_url(url: str):
+    """Return True if the URL is OK, False otherwise. Also return False is the URL has invalid syntax."""
+    try:
+        req = Request(url)
+        urlopen(req)
+    except ValueError:
+        return False
+    except HTTPError as error_code:
+        if error_code.code == 403:
+            return True
+        return False
+    except URLError:
+        return False
+    else:
+        return True
+
+
 if __name__ == "__main__":
     print(get_links('https://cpske.github.io/ISP/'))
+    print(is_valid_url("https://cpske.github.io/ISP/"))
+    print(is_valid_url("https://kucafe.com/search?q=coffee"))
+    print(is_valid_url("#prices"))
+    print(is_valid_url("abcd"))
